@@ -1,0 +1,6 @@
+tr { border: .2pt }
+table { border: solid }
+thead { border: 14pt double(1,12,1) }
+thead { background: cyan }
+tr.odd { background: yellow }
+tr.even { background: cyan }
