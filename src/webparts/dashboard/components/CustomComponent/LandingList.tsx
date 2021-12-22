@@ -160,6 +160,23 @@ export default class LandingList extends React.Component<any, any> {
       }); 
     }
 
+    private async createBatchRequest(){
+      const list = sp.web.lists.getByTitle('MyTestList');
+      const ent = await list.getListItemEntityTypeFullName();
+
+      const batch = sp.web.createBatch();
+      const items = list.items.inBatch(batch);
+
+      items.add({ Title: 'Item 1' }, ent).catch(console.warn);
+      items.add({ Title: 'Item 2' }, ent).catch(console.warn);
+      items.add({ Title: 'Item 3' }, ent).catch(console.warn);
+      items.add({ Title: 'Item 4' }, ent).catch(console.warn);
+      items.add({ Title: 'Item 5' }, ent).catch(console.warn);
+
+      await batch.execute();
+      console.log('Done');
+    }
+
   public render(): React.ReactElement<any> {
     
     return (
@@ -172,6 +189,7 @@ export default class LandingList extends React.Component<any, any> {
             
             <div id="pnpinfo"></div>
             <h4>List Operation</h4>
+            <PrimaryButton onClick={()=>this.createBatchRequest()}>Create Batch Request</PrimaryButton>
             <PrimaryButton onClick={()=>this.viewMyApproval()}>View My Approval</PrimaryButton>
             <PrimaryButton onClick={()=>this.filterRecordCheckBox('Java')}>Checkbox Filter Record</PrimaryButton>
             <PrimaryButton onClick={()=>this.filterRecordDropDown('Admin')}>Dropdown Filter Record</PrimaryButton>

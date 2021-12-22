@@ -410,6 +410,21 @@ getUserDetails = (userId) => {
     })
   }
 
+  public AddListItemAttachment(listname,body):Promise<string>{
+    debugger;
+    return new Promise<string>((resolve,reject)=>{
+        sp.web.lists
+          .getByTitle("MyTestList")
+          .items.add(body)
+          .then(async (response: any) => {
+              debugger;
+              resolve(response.data)
+            },()=>{
+              reject("Error")
+          })
+    })
+  }
+
   public GetRequestDetailsId(itemid) {
       debugger;
       return new Promise<any>((resolve,reject)=>{

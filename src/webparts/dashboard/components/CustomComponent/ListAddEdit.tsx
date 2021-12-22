@@ -56,6 +56,7 @@ export default class ListOperation extends React.Component<any, any> {
       this._onChange=this._onChange.bind(this);
       this.onChoiceChange=this.onChoiceChange.bind(this);
       this._onChangeCheck=this._onChangeCheck.bind(this);
+      this.addFile=this.addFile.bind(this);
     }
   
     componentDidMount(){
@@ -95,6 +96,40 @@ export default class ListOperation extends React.Component<any, any> {
         })
       }) 
     }
+
+    
+  private addFile(event) {
+    var hasinvalidcharacters = false;
+    let resultFile = event.target.files;
+    console.log(resultFile);
+    let fileInfos = [];
+    for (var i = 0; i < resultFile.length; i++) {
+      var fileName = resultFile[i].name;
+      console.log(fileName);
+      var file = resultFile[i];
+      var reader = new FileReader();
+      reader.onload = (function (file) {
+        if (!hasinvalidcharacters) {
+          var format = /[`!@#$%^&*()+\=\[\]{};':"\\|,<>\/?~]/;
+          hasinvalidcharacters = format.test(file.name);
+        }
+
+        return function (e) {
+          fileInfos.push({
+            name: file.name,
+            content: e.target.result,
+          });
+        };
+      })(file);
+      reader.readAsArrayBuffer(file);
+
+      this.setState({
+        hasinvalidcharacters: hasinvalidcharacters,
+      });
+    }
+    this.setState({ fileInfos });
+    console.log(fileInfos);
+  }
 
     public onChoiceChange(ev, option: any): void {  
       this.setState({[ev.target.name]: option.key});  
@@ -205,6 +240,24 @@ export default class ListOperation extends React.Component<any, any> {
       })
     }
 
+    addListItemAttachment=()=>{
+      var item={
+        Title:"Test Add Attachment"
+      }
+      this.myServices.AddListItemAttachment("MyTestList",item).then(async(res:any)=>{
+        debugger;
+        if (this.state.fileInfos != null) {
+          let updateAttachments = await sp.web.lists
+            .getByTitle("MyTestList")
+            .items.getById(res.Id)
+            .attachmentFiles.addMultiple(this.state.fileInfos);
+          console.log(updateAttachments, "UpdateAttachments");
+        }
+
+         alert(res.Id +' attachment uploaded successfully.')
+       })
+    }
+
     updateRecord=()=>{
       console.log(this.state);
       debugger;
@@ -247,6 +300,15 @@ export default class ListOperation extends React.Component<any, any> {
       return (
         <div  className="w100">
           <h3>Add/Edit List operation</h3>
+
+          <label >Attachments:</label>
+            <input
+              type="file"
+              multiple={true}
+              id="file"
+              onChange={this.addFile.bind(this)}
+            />
+            <PrimaryButton onClick={this.addListItemAttachment}>Submit</PrimaryButton>
 
           <TextField
               label="Title"
