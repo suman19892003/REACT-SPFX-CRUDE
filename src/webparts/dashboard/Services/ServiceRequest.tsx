@@ -188,6 +188,22 @@ public AddRequestDetailsRESTApi(webUrl, context,body):Promise<string>{
     })
   }
 
+  public GetAllListItemAttachment(listname){
+    debugger;
+    return new Promise<any[]>((resolve,reject)=>{
+      sp.web.lists.getByTitle(listname).items
+      .select("Id,Title,Attachments,AttachmentFiles")
+      .expand("AttachmentFiles")
+      .get().then(response => {
+        debugger;
+        resolve(response);         
+        },(error:any[])=>{
+            console.log(error);
+            reject('Error Occured');
+        })
+    })
+  }
+
   public GetMyApprovals(userEmail) {
   debugger;
     return new Promise<any[]>((resolve,reject)=>{

@@ -25,8 +25,8 @@ export default class LandingList extends React.Component<any, any> {
     constructor(props){
       super(props);
       this.state={
-
-        itemColl:[]
+        itemColl:[],
+        attachmentfiles:[]
       }
       this.myServices=new RequestServices();
     }
@@ -52,7 +52,31 @@ export default class LandingList extends React.Component<any, any> {
           })
         })
         this.setState({itemColl:itemFromListColl},()=>{
-          //this.setState({item:"Added"})
+          //Get All Attachment From List
+          this.myServices.GetAllListItemAttachment('MyTestList').then((attachmentColl)=>{
+            debugger;
+            //let attachmentfiles=[]
+            attachmentColl.forEach((listItem: any) => {
+              listItem.AttachmentFiles.forEach((afile: any) => {
+                debugger;
+                //let downloadUrl = this.context.pageContext.web.absoluteUrl + "/_layouts/download.aspx?sourceurl=" + afile.ServerRelativeUrl; 
+                let downloadUrl = this.props.webURL + "/_layouts/download.aspx?sourceurl=" + afile.ServerRelativeUrl; 
+                
+               this.state.attachmentfiles.push({
+                  Id:listItem.Id,
+                  Title:listItem.Title,
+                  FileName:afile.FileName,
+                  DownLoadURL:downloadUrl
+                })
+                //attachmentfiles += `<li>(${listItem.Id}) ${listItem.Title} - ${afile.FileName}</li>`;  
+              });
+            });
+            console.log(this.state.attachmentfiles);
+            this.setState({Item:"Updated"})
+            debugger;
+
+
+          })
         });
       })
     }
@@ -188,7 +212,31 @@ export default class LandingList extends React.Component<any, any> {
             <PrimaryButton onClick={()=>this.currentUserDataDynamicDOM()}>Bind Current User Details</PrimaryButton>
             
             <div id="pnpinfo"></div>
-            <h4>List Operation</h4>
+
+            <h4>List Attachment Operation</h4>
+            <table style={{width:"100%"}} className="tableStyle">
+            <tbody>
+              <tr>
+              <th>Item ID</th>
+              <th>Title</th>
+              <th>File Name</th>
+              <th></th>
+            </tr>
+            {this.state.attachmentfiles && this.state.attachmentfiles.map((item)=>{
+              debugger
+              return(
+              <tr>
+                <td>{item.Id}</td>
+                <td>{item.Title}</td>
+                <td>{item.FileName}</td>
+                <td><a href={item.DownLoadURL}>Download</a></td>
+                </tr>
+            )})
+            }
+            </tbody>
+          </table>
+
+            <h4>List Item Operation</h4>
             <PrimaryButton onClick={()=>this.createBatchRequest()}>Create Batch Request</PrimaryButton>
             <PrimaryButton onClick={()=>this.viewMyApproval()}>View My Approval</PrimaryButton>
             <PrimaryButton onClick={()=>this.filterRecordCheckBox('Java')}>Checkbox Filter Record</PrimaryButton>

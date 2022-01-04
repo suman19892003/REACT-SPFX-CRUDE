@@ -299,7 +299,7 @@ export default class ListOperation extends React.Component<any, any> {
 
       return (
         <div  className="w100">
-          <h3>List Add Attachment</h3>
+          <h3>Add/Edit List operation</h3>
 
           <label >Attachments:</label>
             <input
@@ -310,7 +310,6 @@ export default class ListOperation extends React.Component<any, any> {
             />
             <PrimaryButton onClick={this.addListItemAttachment}>Submit</PrimaryButton>
 
-          <h3>Add/Edit List operation</h3>
           <TextField
               label="Title"
               id="txtTitle"
