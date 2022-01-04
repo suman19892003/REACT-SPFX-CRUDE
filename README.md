@@ -12,7 +12,8 @@ Get Current User Details
 Uses Moment
 Apply multiple column type filter in Query
 
-![image](https://user-images.githubusercontent.com/45258794/146773126-4b2b32ce-1dbc-4a61-9176-937a879e49a4.png)
+![image](https://user-images.githubusercontent.com/45258794/148091278-69285bd0-3835-43e3-9e1e-a847dc341fe2.png)
+
 
 #List ADD/Edit
 
